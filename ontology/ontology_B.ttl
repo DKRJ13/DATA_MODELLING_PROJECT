@@ -1,0 +1,187 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Hospital B's LOCAL namespace — everything here is B-specific terminology
+@prefix clin: <http://hospital-b.org/clinical#> .
+
+# ─────────────────────────────────────────────────────────────
+#  ONTOLOGY B — "Metro Clinical Centre" Local Schema
+#
+#  This file describes ONLY how Hospital B structures its data.
+#  It uses Clinical terminology and ICD-10 codes.
+#  It knows NOTHING about Hospital A or any global standard.
+#  This is what the Hospital B "team" would build independently.
+# ─────────────────────────────────────────────────────────────
+<http://hospital-b.org/clinical>
+    rdf:type owl:Ontology ;
+    rdfs:label "Hospital B — Clinical Local Ontology" ;
+    rdfs:comment "Local schema for Metro Clinical Centre. Uses clinical terminology and ICD-10 codes." .
+
+
+# ──────────────────────────────────────────────
+#  CLASSES  (Hospital B's vocabulary)
+# ──────────────────────────────────────────────
+
+# Hospital B calls patients "ClinicalSubject" — completely different from Hospital A's "EHR_Record"
+clin:ClinicalSubject rdf:type owl:Class ;
+    rdfs:label "Clinical Subject" ;
+    rdfs:comment "A patient in Hospital B's clinical system, referred to as a 'subject'." .
+
+# Hospital B uses "Diagnosis" for medical conditions (vs Hospital A's "Condition")
+clin:Diagnosis rdf:type owl:Class ;
+    rdfs:label "Diagnosis" ;
+    rdfs:comment "A clinical diagnosis, typically coded using ICD-10 codes." .
+
+# Hospital B tracks medications separately
+clin:Medication rdf:type owl:Class ;
+    rdfs:label "Medication" ;
+    rdfs:comment "A medication in Hospital B's clinical records." .
+
+# Hospital B uniquely tracks food/nutrition logs
+clin:NutritionEntry rdf:type owl:Class ;
+    rdfs:label "Nutrition Entry" ;
+    rdfs:comment "A food item recorded in Hospital B's patient nutrition log." .
+
+# Hospital B uses "ClinicalOfficer" (vs Hospital A's "AttendingPhysician")
+clin:ClinicalOfficer rdf:type owl:Class ;
+    rdfs:label "Clinical Officer" .
+
+
+# ──────────────────────────────────────────────
+#  DATA PROPERTIES  (Hospital B's field names)
+# ──────────────────────────────────────────────
+
+# Hospital B uses <Patient_Name> as "Surname, Firstname" — different format from Hospital A
+clin:Patient_Name rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range  xsd:string ;
+    rdfs:label "Patient_Name" .
+
+# Hospital B uses Subject_Ref instead of PatientID
+clin:Subject_Ref rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range  xsd:string ;
+    rdfs:label "Subject_Ref" .
+
+clin:DOB rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range  xsd:string ;
+    rdfs:label "DOB" .
+
+clin:Sex rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range  xsd:string ;
+    rdfs:label "Sex" .
+
+# Hospital B uses ICD-10 codes to identify diagnoses, not free text
+clin:ICDCode rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:Diagnosis ;
+    rdfs:range  xsd:string ;
+    rdfs:label "ICDCode" .
+
+clin:DiagnosisText rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:Diagnosis ;
+    rdfs:range  xsd:string ;
+    rdfs:label "DiagnosisText" .
+
+# Hospital B uses "GenericName" for drug names (vs Hospital A's brand-style "DrugName")
+clin:GenericName rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:Medication ;
+    rdfs:range  xsd:string ;
+    rdfs:label "GenericName" .
+
+clin:Strength rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:Medication ;
+    rdfs:range  xsd:string ;
+    rdfs:label "Strength" .
+
+clin:FoodItem rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:NutritionEntry ;
+    rdfs:range  xsd:string ;
+    rdfs:label "FoodItem" .
+
+
+# ──────────────────────────────────────────────
+#  OBJECT PROPERTIES  (Hospital B's relationships)
+# ──────────────────────────────────────────────
+
+# Hospital B uses "hasDiagnosis" (vs Hospital A's "hasCondition")
+clin:hasDiagnosis rdf:type owl:ObjectProperty ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range  clin:Diagnosis ;
+    rdfs:label "hasDiagnosis" .
+
+# Hospital B uses "onMedication" (vs Hospital A's "hasPrescription")
+clin:onMedication rdf:type owl:ObjectProperty ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range  clin:Medication ;
+    rdfs:label "onMedication" .
+
+# Hospital B uses "hasNutritionEntry" — Hospital A has no equivalent
+clin:hasNutritionEntry rdf:type owl:ObjectProperty ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range  clin:NutritionEntry ;
+    rdfs:label "hasNutritionEntry" .
+
+# Hospital B uses "underCareOf" (vs Hospital A's "seenBy")
+clin:underCareOf rdf:type owl:ObjectProperty ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range  clin:ClinicalOfficer ;
+    rdfs:label "underCareOf" .
+
+
+# ──────────────────────────────────────────────
+#  DIAGNOSIS INSTANCES  (Hospital B's ICD-coded terminology)
+# ──────────────────────────────────────────────
+
+clin:AdultOnsetDiabetes rdf:type owl:NamedIndividual , clin:Diagnosis ;
+    clin:ICDCode "E11" ;
+    clin:DiagnosisText "Adult-onset diabetes" .          # ← different name, same disease as ehr:DiabetesType2
+
+clin:EssentialHypertension rdf:type owl:NamedIndividual , clin:Diagnosis ;
+    clin:ICDCode "I10" ;
+    clin:DiagnosisText "Essential hypertension" .        # ← different name, same disease as ehr:Hypertension
+
+clin:ChronicRenalFailure rdf:type owl:NamedIndividual , clin:Diagnosis ;
+    clin:ICDCode "N18" ;
+    clin:DiagnosisText "Chronic renal failure" .
+
+clin:BronchialAsthma rdf:type owl:NamedIndividual , clin:Diagnosis ;
+    clin:ICDCode "J45" ;
+    clin:DiagnosisText "Bronchial asthma" .              # ← different name, same disease as ehr:Asthma
+
+
+# ──────────────────────────────────────────────
+#  MEDICATION INSTANCES  (Hospital B's generic drug names)
+# ──────────────────────────────────────────────
+
+clin:MetforminHydrochloride rdf:type owl:NamedIndividual , clin:Medication ;
+    clin:GenericName "Metformin Hydrochloride" .         # ← same drug as ehr:Metformin
+
+clin:AcetylsalicylicAcid rdf:type owl:NamedIndividual , clin:Medication ;
+    clin:GenericName "Acetylsalicylic Acid" .            # ← same drug as ehr:Aspirin
+
+clin:Ibuprofen rdf:type owl:NamedIndividual , clin:Medication ;
+    clin:GenericName "Ibuprofen" .
+
+clin:Lisinopril rdf:type owl:NamedIndividual , clin:Medication ;
+    clin:GenericName "Lisinopril" .
+
+clin:SalbutamolSulfate rdf:type owl:NamedIndividual , clin:Medication ;
+    clin:GenericName "Salbutamol Sulfate" .              # ← same drug as ehr:Salbutamol
+
+clin:Amlodipine rdf:type owl:NamedIndividual , clin:Medication ;
+    clin:GenericName "Amlodipine" .
+
+
+# ──────────────────────────────────────────────
+#  FOOD INSTANCES  (Hospital B uniquely records these)
+# ──────────────────────────────────────────────
+
+clin:GrapefruitJuice rdf:type owl:NamedIndividual , clin:NutritionEntry ;
+    clin:FoodItem "Grapefruit Juice" .
+
+clin:Grapefruit rdf:type owl:NamedIndividual , clin:NutritionEntry ;
+    clin:FoodItem "Grapefruit" .

@@ -1,0 +1,631 @@
+@prefix clin: <http://hospital-b.org/clinical#> .
+@prefix ehr: <http://hospital-a.org/ehr#> .
+@prefix med: <http://medonto.org/global#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ehr:BloodType a owl:DatatypeProperty ;
+    rdfs:label "BloodType" ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range xsd:string .
+
+ehr:DateOfBirth a owl:DatatypeProperty ;
+    rdfs:label "DateOfBirth" ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range xsd:string .
+
+ehr:Dosage a owl:DatatypeProperty ;
+    rdfs:label "Dosage" ;
+    rdfs:domain ehr:Prescription ;
+    rdfs:range xsd:string .
+
+ehr:Frequency a owl:DatatypeProperty ;
+    rdfs:label "Frequency" ;
+    rdfs:domain ehr:Prescription ;
+    rdfs:range xsd:string .
+
+ehr:Gender a owl:DatatypeProperty ;
+    rdfs:label "Gender" ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range xsd:string .
+
+ehr:PatientID a owl:DatatypeProperty ;
+    rdfs:label "PatientID" ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range xsd:string .
+
+clin:DOB a owl:DatatypeProperty ;
+    rdfs:label "DOB" ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range xsd:string .
+
+clin:DiagnosisText a owl:DatatypeProperty ;
+    rdfs:label "DiagnosisText" ;
+    rdfs:domain clin:Diagnosis ;
+    rdfs:range xsd:string .
+
+clin:FoodItem a owl:DatatypeProperty ;
+    rdfs:label "FoodItem" ;
+    rdfs:domain clin:NutritionEntry ;
+    rdfs:range xsd:string .
+
+clin:ICDCode a owl:DatatypeProperty ;
+    rdfs:label "ICDCode" ;
+    rdfs:domain clin:Diagnosis ;
+    rdfs:range xsd:string .
+
+clin:Sex a owl:DatatypeProperty ;
+    rdfs:label "Sex" ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range xsd:string .
+
+clin:Strength a owl:DatatypeProperty ;
+    rdfs:label "Strength" ;
+    rdfs:domain clin:Medication ;
+    rdfs:range xsd:string .
+
+clin:Subject_Ref a owl:DatatypeProperty ;
+    rdfs:label "Subject_Ref" ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range xsd:string .
+
+<http://medonto.org/global> a owl:Ontology ;
+    rdfs:label "Global Medical Mediator Ontology" ;
+    rdfs:comment "Mediator ontology that imports both hospital local ontologies and defines mappings between them and the global schema." ;
+    owl:imports <http://hospital-a.org/ehr>,
+        <http://hospital-b.org/clinical> .
+
+med:NSAIDAsthmaAlert a med:DangerousInteraction,
+        owl:NamedIndividual ;
+    rdfs:label "NSAID + Asthma Interaction" ;
+    rdfs:comment "NSAIDs (Aspirin/Ibuprofen) can trigger bronchospasm in asthmatic patients." .
+
+med:consumesFood a owl:ObjectProperty ;
+    rdfs:label "consumesFood" ;
+    rdfs:domain med:Patient ;
+    rdfs:range med:FoodSubstance ;
+    owl:equivalentProperty clin:hasNutritionEntry .
+
+med:drugName a owl:DatatypeProperty ;
+    rdfs:label "drugName" ;
+    rdfs:domain med:Drug ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty ehr:DrugName,
+        clin:GenericName .
+
+med:fullName a owl:DatatypeProperty ;
+    rdfs:label "fullName" ;
+    rdfs:domain med:Patient ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty ehr:FullName,
+        clin:Patient_Name .
+
+med:hasCondition a owl:ObjectProperty ;
+    rdfs:label "hasCondition" ;
+    rdfs:domain med:Patient ;
+    rdfs:range med:Disease ;
+    owl:equivalentProperty ehr:hasCondition,
+        clin:hasDiagnosis .
+
+med:hasInteractionRisk a owl:ObjectProperty ;
+    rdfs:label "hasInteractionRisk" ;
+    rdfs:domain med:Patient ;
+    rdfs:range med:DangerousInteraction .
+
+med:isPrescribedTo a owl:ObjectProperty ;
+    rdfs:label "isPrescribedTo" ;
+    owl:inverseOf med:prescribedDrug .
+
+med:sourceHospital a owl:DatatypeProperty ;
+    rdfs:label "sourceHospital" ;
+    rdfs:domain med:Patient ;
+    rdfs:range xsd:string .
+
+med:treats a owl:ObjectProperty ;
+    rdfs:label "treats" ;
+    owl:inverseOf med:treatedBy .
+
+<http://hospital-a.org/ehr> a owl:Ontology ;
+    rdfs:label "Hospital A — EHR Local Ontology" ;
+    rdfs:comment "Local schema for City General Hospital. Uses EHR terminology." .
+
+ehr:DrugName a owl:DatatypeProperty ;
+    rdfs:label "DrugName" ;
+    rdfs:domain ehr:Prescription ;
+    rdfs:range xsd:string .
+
+ehr:FullName a owl:DatatypeProperty ;
+    rdfs:label "FullName" ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range xsd:string .
+
+ehr:hasCondition a owl:ObjectProperty ;
+    rdfs:label "hasCondition" ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range ehr:Condition .
+
+ehr:hasPrescription a owl:ObjectProperty ;
+    rdfs:label "hasPrescription" ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range ehr:Prescription .
+
+ehr:seenBy a owl:ObjectProperty ;
+    rdfs:label "seenBy" ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range ehr:AttendingPhysician .
+
+<http://hospital-a.org/patient#P_103> a ehr:EHR_Record ;
+    ehr:BloodType "B+" ;
+    ehr:DateOfBirth "1990-02-28" ;
+    ehr:FullName "Carol White" ;
+    ehr:Gender "Female" ;
+    ehr:PatientID "P-103" ;
+    ehr:hasCondition ehr:Asthma ;
+    ehr:hasPrescription ehr:Salbutamol ;
+    ehr:seenBy ehr:Dr__Sarah_Connor ;
+    med:sourceHospital "Hospital A - City General Hospital" .
+
+<http://hospital-a.org/patient#P_104> a ehr:EHR_Record ;
+    ehr:BloodType "AB+" ;
+    ehr:DateOfBirth "1965-09-17" ;
+    ehr:FullName "David Lee" ;
+    ehr:Gender "Male" ;
+    ehr:PatientID "P-104" ;
+    ehr:hasCondition ehr:DiabetesType2,
+        ehr:Hypertension ;
+    ehr:hasPrescription ehr:Ibuprofen,
+        ehr:Metformin ;
+    ehr:seenBy ehr:Dr__James_Wilson ;
+    med:sourceHospital "Hospital A - City General Hospital" .
+
+<http://hospital-b.org/clinical> a owl:Ontology ;
+    rdfs:label "Hospital B — Clinical Local Ontology" ;
+    rdfs:comment "Local schema for Metro Clinical Centre. Uses clinical terminology and ICD-10 codes." .
+
+clin:Dr__James_Wilson a clin:ClinicalOfficer ;
+    clin:Patient_Name "Dr. James Wilson" ;
+    med:treats <http://hospital-b.org/patient#BJ_2024_002> .
+
+clin:Dr__Sarah_Connor a clin:ClinicalOfficer ;
+    clin:Patient_Name "Dr. Sarah Connor" ;
+    med:treats <http://hospital-b.org/patient#AS_2024_001> .
+
+clin:GenericName a owl:DatatypeProperty ;
+    rdfs:label "GenericName" ;
+    rdfs:domain clin:Medication ;
+    rdfs:range xsd:string .
+
+clin:Patient_Name a owl:DatatypeProperty ;
+    rdfs:label "Patient_Name" ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range xsd:string .
+
+clin:hasDiagnosis a owl:ObjectProperty ;
+    rdfs:label "hasDiagnosis" ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range clin:Diagnosis .
+
+clin:hasNutritionEntry a owl:ObjectProperty ;
+    rdfs:label "hasNutritionEntry" ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range clin:NutritionEntry .
+
+clin:onMedication a owl:ObjectProperty ;
+    rdfs:label "onMedication" ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range clin:Medication .
+
+clin:underCareOf a owl:ObjectProperty ;
+    rdfs:label "underCareOf" ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range clin:ClinicalOfficer .
+
+<http://hospital-b.org/patient#ET_2024_003> a clin:ClinicalSubject ;
+    clin:DOB "05/07/1988" ;
+    clin:Patient_Name "Emily Turner" ;
+    clin:Sex "F" ;
+    clin:Subject_Ref "ET-2024-003" ;
+    clin:hasDiagnosis clin:AdultOnsetDiabetes,
+        clin:BronchialAsthma ;
+    clin:onMedication clin:Ibuprofen,
+        clin:SalbutamolSulfate ;
+    clin:underCareOf clin:Dr__Riya_Patel ;
+    med:sourceHospital "Hospital B - Metro Clinical Centre" .
+
+<http://hospital-b.org/patient#MK_2024_004> a clin:ClinicalSubject ;
+    clin:DOB "22/04/1955" ;
+    clin:Patient_Name "Mohan Kumar" ;
+    clin:Sex "M" ;
+    clin:Subject_Ref "MK-2024-004" ;
+    clin:hasDiagnosis clin:EssentialHypertension ;
+    clin:hasNutritionEntry clin:Grapefruit ;
+    clin:onMedication clin:Amlodipine ;
+    clin:underCareOf clin:Dr__Riya_Patel ;
+    med:hasInteractionRisk med:AmlodipineGrapefruitAlert ;
+    med:sourceHospital "Hospital B - Metro Clinical Centre" .
+
+med:Amlodipine a med:Antihypertensive,
+        owl:NamedIndividual ;
+    med:drugName "Amlodipine" ;
+    owl:sameAs clin:Amlodipine .
+
+med:AmlodipineGrapefruitAlert a med:DangerousInteraction,
+        owl:NamedIndividual ;
+    rdfs:label "Amlodipine + Grapefruit Interaction" ;
+    rdfs:comment "Grapefruit blocks CYP3A4 → Amlodipine accumulates → severe hypotension." .
+
+med:Antidiabetic a owl:Class ;
+    rdfs:label "Antidiabetic" ;
+    rdfs:subClassOf med:Drug .
+
+med:BloodThinner a owl:Class ;
+    rdfs:label "Blood Thinner" ;
+    rdfs:subClassOf med:Drug .
+
+med:Bronchodilator a owl:Class ;
+    rdfs:label "Bronchodilator" ;
+    rdfs:subClassOf med:Drug .
+
+med:CYP3A4Inhibitor a owl:Class ;
+    rdfs:label "CYP3A4 Inhibitor Food" ;
+    rdfs:comment "Grapefruit-type foods that block liver enzymes and amplify drug effects." ;
+    rdfs:subClassOf med:FoodSubstance .
+
+med:CardiovascularDisease a owl:Class ;
+    rdfs:label "Cardiovascular Disease" ;
+    rdfs:subClassOf med:Disease .
+
+med:Doctor a owl:Class ;
+    rdfs:label "Doctor" ;
+    rdfs:comment "Global canonical class for a physician or clinical officer." ;
+    owl:equivalentClass ehr:AttendingPhysician,
+        clin:ClinicalOfficer .
+
+med:MetabolicDisorder a owl:Class ;
+    rdfs:label "Metabolic Disorder" ;
+    rdfs:subClassOf med:Disease .
+
+med:RenalDisease a owl:Class ;
+    rdfs:label "Renal Disease" ;
+    rdfs:subClassOf med:Disease .
+
+med:RespiratoryDisease a owl:Class ;
+    rdfs:label "Respiratory Disease" ;
+    rdfs:subClassOf med:Disease .
+
+med:Warfarin a med:BloodThinner,
+        owl:NamedIndividual ;
+    med:drugName "Warfarin" ;
+    owl:sameAs ehr:Warfarin .
+
+med:WarfarinGrapefruitAlert a med:DangerousInteraction,
+        owl:NamedIndividual ;
+    rdfs:label "Warfarin + Grapefruit Interaction" ;
+    rdfs:comment "Grapefruit inhibits Warfarin metabolism → blood thinner overdose risk." .
+
+med:prescribedDrug a owl:ObjectProperty ;
+    rdfs:label "prescribedDrug" ;
+    rdfs:domain med:Patient ;
+    rdfs:range med:Drug ;
+    owl:equivalentProperty ehr:hasPrescription,
+        clin:onMedication .
+
+med:treatedBy a owl:ObjectProperty ;
+    rdfs:label "treatedBy" ;
+    rdfs:domain med:Patient ;
+    rdfs:range med:Doctor ;
+    owl:equivalentProperty ehr:seenBy,
+        clin:underCareOf .
+
+ehr:Aspirin a ehr:Prescription,
+        owl:NamedIndividual ;
+    ehr:DrugName "Aspirin" ;
+    owl:sameAs med:Aspirin .
+
+ehr:Asthma a ehr:Condition,
+        owl:NamedIndividual ;
+    rdfs:label "Asthma" ;
+    owl:sameAs med:Asthma .
+
+ehr:ChronicKidneyDisease a ehr:Condition,
+        owl:NamedIndividual ;
+    rdfs:label "Chronic Kidney Disease" ;
+    owl:sameAs med:ChronicKidneyDisease .
+
+ehr:Dr__James_Wilson a ehr:AttendingPhysician ;
+    ehr:FullName "Dr. James Wilson" ;
+    med:treats <http://hospital-a.org/patient#P_102>,
+        <http://hospital-a.org/patient#P_104> .
+
+ehr:Dr__Sarah_Connor a ehr:AttendingPhysician ;
+    ehr:FullName "Dr. Sarah Connor" ;
+    med:treats <http://hospital-a.org/patient#P_101>,
+        <http://hospital-a.org/patient#P_103> .
+
+ehr:Ibuprofen a ehr:Prescription,
+        owl:NamedIndividual ;
+    ehr:DrugName "Ibuprofen" ;
+    owl:sameAs med:Ibuprofen .
+
+ehr:Lisinopril a ehr:Prescription,
+        owl:NamedIndividual ;
+    ehr:DrugName "Lisinopril" ;
+    owl:sameAs med:Lisinopril .
+
+ehr:Salbutamol a ehr:Prescription,
+        owl:NamedIndividual ;
+    ehr:DrugName "Salbutamol" ;
+    owl:sameAs med:Salbutamol .
+
+ehr:Warfarin a ehr:Prescription,
+        owl:NamedIndividual ;
+    ehr:DrugName "Warfarin" ;
+    owl:sameAs med:Warfarin .
+
+<http://hospital-a.org/patient#P_101> a ehr:EHR_Record ;
+    ehr:BloodType "A+" ;
+    ehr:DateOfBirth "1985-06-14" ;
+    ehr:FullName "Alice Smith" ;
+    ehr:Gender "Female" ;
+    ehr:PatientID "P-101" ;
+    ehr:hasCondition ehr:DiabetesType2 ;
+    ehr:hasPrescription ehr:Metformin,
+        ehr:Warfarin ;
+    ehr:seenBy ehr:Dr__Sarah_Connor ;
+    med:hasInteractionRisk med:WarfarinGrapefruitAlert ;
+    med:sourceHospital "Hospital A - City General Hospital" ;
+    owl:sameAs <http://hospital-b.org/patient#AS_2024_001> .
+
+<http://hospital-a.org/patient#P_102> a ehr:EHR_Record ;
+    ehr:BloodType "O-" ;
+    ehr:DateOfBirth "1972-11-03" ;
+    ehr:FullName "Bob Johnson" ;
+    ehr:Gender "Male" ;
+    ehr:PatientID "P-102" ;
+    ehr:hasCondition ehr:ChronicKidneyDisease,
+        ehr:Hypertension ;
+    ehr:hasPrescription ehr:Aspirin,
+        ehr:Lisinopril ;
+    ehr:seenBy ehr:Dr__James_Wilson ;
+    med:sourceHospital "Hospital A - City General Hospital" ;
+    owl:sameAs <http://hospital-b.org/patient#BJ_2024_002> .
+
+clin:AcetylsalicylicAcid a clin:Medication,
+        owl:NamedIndividual ;
+    clin:GenericName "Acetylsalicylic Acid" ;
+    owl:sameAs med:Aspirin .
+
+clin:Amlodipine a clin:Medication,
+        owl:NamedIndividual ;
+    clin:GenericName "Amlodipine" ;
+    owl:sameAs med:Amlodipine .
+
+clin:BronchialAsthma a clin:Diagnosis,
+        owl:NamedIndividual ;
+    clin:DiagnosisText "Bronchial asthma" ;
+    clin:ICDCode "J45" ;
+    owl:sameAs med:Asthma .
+
+clin:ChronicRenalFailure a clin:Diagnosis,
+        owl:NamedIndividual ;
+    clin:DiagnosisText "Chronic renal failure" ;
+    clin:ICDCode "N18" ;
+    owl:sameAs med:ChronicKidneyDisease .
+
+clin:Dr__Riya_Patel a clin:ClinicalOfficer ;
+    clin:Patient_Name "Dr. Riya Patel" ;
+    med:treats <http://hospital-b.org/patient#ET_2024_003>,
+        <http://hospital-b.org/patient#MK_2024_004> .
+
+clin:Grapefruit a clin:NutritionEntry,
+        owl:NamedIndividual ;
+    clin:FoodItem "Grapefruit" ;
+    owl:sameAs med:Grapefruit .
+
+clin:GrapefruitJuice a clin:NutritionEntry,
+        owl:NamedIndividual ;
+    clin:FoodItem "Grapefruit Juice" ;
+    owl:sameAs med:Grapefruit .
+
+clin:Ibuprofen a clin:Medication,
+        owl:NamedIndividual ;
+    clin:GenericName "Ibuprofen" ;
+    owl:sameAs med:Ibuprofen .
+
+clin:Lisinopril a clin:Medication,
+        owl:NamedIndividual ;
+    clin:GenericName "Lisinopril" ;
+    owl:sameAs med:Lisinopril .
+
+clin:MetforminHydrochloride a clin:Medication,
+        owl:NamedIndividual ;
+    clin:GenericName "Metformin Hydrochloride" ;
+    owl:sameAs med:Metformin .
+
+clin:SalbutamolSulfate a clin:Medication,
+        owl:NamedIndividual ;
+    clin:GenericName "Salbutamol Sulfate" ;
+    owl:sameAs med:Salbutamol .
+
+<http://hospital-b.org/patient#AS_2024_001> a clin:ClinicalSubject ;
+    clin:DOB "14/06/1985" ;
+    clin:Patient_Name "Alice Smith" ;
+    clin:Sex "F" ;
+    clin:Subject_Ref "AS-2024-001" ;
+    clin:hasDiagnosis clin:AdultOnsetDiabetes ;
+    clin:hasNutritionEntry clin:GrapefruitJuice ;
+    clin:onMedication clin:MetforminHydrochloride ;
+    clin:underCareOf clin:Dr__Sarah_Connor ;
+    med:sourceHospital "Hospital B - Metro Clinical Centre" ;
+    owl:sameAs <http://hospital-a.org/patient#P_101> .
+
+<http://hospital-b.org/patient#BJ_2024_002> a clin:ClinicalSubject ;
+    clin:DOB "03/11/1972" ;
+    clin:Patient_Name "Bob Johnson" ;
+    clin:Sex "M" ;
+    clin:Subject_Ref "BJ-2024-002" ;
+    clin:hasDiagnosis clin:ChronicRenalFailure,
+        clin:EssentialHypertension ;
+    clin:onMedication clin:AcetylsalicylicAcid,
+        clin:Lisinopril ;
+    clin:underCareOf clin:Dr__James_Wilson ;
+    med:sourceHospital "Hospital B - Metro Clinical Centre" ;
+    owl:sameAs <http://hospital-a.org/patient#P_102> .
+
+med:Antihypertensive a owl:Class ;
+    rdfs:label "Antihypertensive" ;
+    rdfs:subClassOf med:Drug .
+
+med:Aspirin a med:NSAID,
+        owl:NamedIndividual ;
+    med:drugName "Aspirin" ;
+    owl:sameAs ehr:Aspirin,
+        clin:AcetylsalicylicAcid .
+
+med:Asthma a med:RespiratoryDisease,
+        owl:NamedIndividual ;
+    rdfs:label "Asthma (Global)" ;
+    owl:sameAs ehr:Asthma,
+        clin:BronchialAsthma .
+
+med:ChronicKidneyDisease a med:RenalDisease,
+        owl:NamedIndividual ;
+    rdfs:label "Chronic Kidney Disease (Global)" ;
+    owl:sameAs ehr:ChronicKidneyDisease,
+        clin:ChronicRenalFailure .
+
+med:Diabetes a med:MetabolicDisorder,
+        owl:NamedIndividual ;
+    rdfs:label "Diabetes (Global)" ;
+    owl:sameAs ehr:DiabetesType2,
+        clin:AdultOnsetDiabetes .
+
+med:FoodSubstance a owl:Class ;
+    rdfs:label "Food Substance" ;
+    rdfs:comment "A food item that may interact with medications. Only Hospital B records these." ;
+    owl:equivalentClass clin:NutritionEntry .
+
+med:Grapefruit a med:CYP3A4Inhibitor,
+        owl:NamedIndividual ;
+    rdfs:label "Grapefruit" ;
+    rdfs:comment "Inhibits CYP3A4 liver enzymes. Interacts dangerously with Warfarin, Amlodipine, and others." ;
+    owl:sameAs clin:Grapefruit,
+        clin:GrapefruitJuice .
+
+med:Hypertension a med:CardiovascularDisease,
+        owl:NamedIndividual ;
+    rdfs:label "Hypertension (Global)" ;
+    owl:sameAs ehr:Hypertension,
+        clin:EssentialHypertension .
+
+med:Ibuprofen a med:NSAID,
+        owl:NamedIndividual ;
+    med:drugName "Ibuprofen" ;
+    owl:sameAs ehr:Ibuprofen,
+        clin:Ibuprofen .
+
+med:Lisinopril a med:Antihypertensive,
+        owl:NamedIndividual ;
+    med:drugName "Lisinopril" ;
+    owl:sameAs ehr:Lisinopril,
+        clin:Lisinopril .
+
+med:Metformin a med:Antidiabetic,
+        owl:NamedIndividual ;
+    med:drugName "Metformin" ;
+    owl:sameAs ehr:Metformin,
+        clin:MetforminHydrochloride .
+
+med:NSAID a owl:Class ;
+    rdfs:label "NSAID" ;
+    rdfs:comment "Non-Steroidal Anti-Inflammatory Drug. Superclass of Aspirin, Ibuprofen, etc." ;
+    rdfs:subClassOf med:Drug .
+
+med:Salbutamol a med:Bronchodilator,
+        owl:NamedIndividual ;
+    med:drugName "Salbutamol" ;
+    owl:sameAs ehr:Salbutamol,
+        clin:SalbutamolSulfate .
+
+ehr:DiabetesType2 a ehr:Condition,
+        owl:NamedIndividual ;
+    rdfs:label "Diabetes Type 2" ;
+    owl:sameAs med:Diabetes .
+
+ehr:Hypertension a ehr:Condition,
+        owl:NamedIndividual ;
+    rdfs:label "Hypertension" ;
+    owl:sameAs med:Hypertension .
+
+ehr:Metformin a ehr:Prescription,
+        owl:NamedIndividual ;
+    ehr:DrugName "Metformin" ;
+    owl:sameAs med:Metformin .
+
+clin:AdultOnsetDiabetes a clin:Diagnosis,
+        owl:NamedIndividual ;
+    clin:DiagnosisText "Adult-onset diabetes" ;
+    clin:ICDCode "E11" ;
+    owl:sameAs med:Diabetes .
+
+clin:EssentialHypertension a clin:Diagnosis,
+        owl:NamedIndividual ;
+    clin:DiagnosisText "Essential hypertension" ;
+    clin:ICDCode "I10" ;
+    owl:sameAs med:Hypertension .
+
+ehr:AttendingPhysician a owl:Class ;
+    rdfs:label "Attending Physician" .
+
+med:DangerousInteraction a owl:Class ;
+    rdfs:label "Dangerous Interaction" ;
+    rdfs:comment "A clinically dangerous drug-drug or drug-food combination. Instances are inferred by the reasoner." .
+
+clin:ClinicalOfficer a owl:Class ;
+    rdfs:label "Clinical Officer" .
+
+clin:NutritionEntry a owl:Class ;
+    rdfs:label "Nutrition Entry" ;
+    rdfs:comment "A food item recorded in Hospital B's patient nutrition log." .
+
+med:Disease a owl:Class ;
+    rdfs:label "Disease" ;
+    owl:equivalentClass ehr:Condition,
+        clin:Diagnosis .
+
+ehr:Condition a owl:Class ;
+    rdfs:label "Condition" ;
+    rdfs:comment "A medical condition as recorded in Hospital A's EHR." .
+
+med:Drug a owl:Class ;
+    rdfs:label "Drug" ;
+    owl:equivalentClass ehr:Prescription,
+        clin:Medication .
+
+med:Patient a owl:Class ;
+    rdfs:label "Patient" ;
+    rdfs:comment "Global canonical class for any person receiving medical care, regardless of which hospital uses which terminology." ;
+    owl:equivalentClass ehr:EHR_Record,
+        clin:ClinicalSubject .
+
+clin:Diagnosis a owl:Class ;
+    rdfs:label "Diagnosis" ;
+    rdfs:comment "A clinical diagnosis, typically coded using ICD-10 codes." .
+
+clin:Medication a owl:Class ;
+    rdfs:label "Medication" ;
+    rdfs:comment "A medication in Hospital B's clinical records." .
+
+ehr:Prescription a owl:Class ;
+    rdfs:label "Prescription" ;
+    rdfs:comment "A drug prescribed to a patient in Hospital A." .
+
+ehr:EHR_Record a owl:Class ;
+    rdfs:label "EHR Record" ;
+    rdfs:comment "A patient record in Hospital A's Electronic Health Record system." .
+
+clin:ClinicalSubject a owl:Class ;
+    rdfs:label "Clinical Subject" ;
+    rdfs:comment "A patient in Hospital B's clinical system, referred to as a 'subject'." .
+

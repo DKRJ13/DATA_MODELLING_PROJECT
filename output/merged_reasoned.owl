@@ -1,0 +1,674 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://hospital-a.org/ehr"
+         xmlns="http://hospital-a.org/ehr#"
+         xmlns:clin="http://hospital-b.org/clinical#"
+         xmlns:id="http://snomed.info/id/">
+
+<owl:Ontology rdf:about="http://hospital-a.org/ehr">
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hospital A — EHR Local Ontology</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Local schema for City General Hospital. Uses EHR terminology.</rdfs:comment>
+</owl:Ontology>
+
+<owl:Ontology rdf:about="http://hospital-b.org/clinical">
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hospital B — Clinical Local Ontology</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Local schema for Metro Clinical Centre. Uses clinical terminology and ICD-10 codes.</rdfs:comment>
+</owl:Ontology>
+
+<owl:Ontology rdf:about="http://snomed.info/id/core">
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SNOMED CT Subset</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A lightweight simulation of SNOMED CT using real SCTIDs for integration.</rdfs:comment>
+</owl:Ontology>
+
+<owl:Ontology rdf:about="http://medonto.org/snomed-mapping"/>
+
+<owl:ObjectProperty rdf:about="http://hospital-b.org/clinical#hasNutritionEntry">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:range rdf:resource="http://hospital-b.org/clinical#NutritionEntry"/>
+  <owl:equivalentProperty rdf:resource="http://snomed.info/id/consumes"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">hasNutritionEntry</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="http://hospital-b.org/clinical#underCareOf">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:range rdf:resource="http://hospital-b.org/clinical#ClinicalOfficer"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">underCareOf</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasCondition">
+  <rdfs:domain rdf:resource="#EHR_Record"/>
+  <rdfs:range rdf:resource="#Condition"/>
+  <owl:equivalentProperty rdf:resource="http://hospital-b.org/clinical#hasDiagnosis"/>
+  <owl:equivalentProperty rdf:resource="http://snomed.info/id/associatedWith"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">hasCondition</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasPrescription">
+  <rdfs:domain rdf:resource="#EHR_Record"/>
+  <rdfs:range rdf:resource="#Prescription"/>
+  <owl:equivalentProperty rdf:resource="http://hospital-b.org/clinical#onMedication"/>
+  <owl:equivalentProperty rdf:resource="http://snomed.info/id/prescribedTo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">hasPrescription</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="http://hospital-b.org/clinical#hasDiagnosis">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:range rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <owl:equivalentProperty rdf:resource="#hasCondition"/>
+  <owl:equivalentProperty rdf:resource="http://snomed.info/id/associatedWith"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">hasDiagnosis</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="http://hospital-b.org/clinical#onMedication">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:range rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <owl:equivalentProperty rdf:resource="#hasPrescription"/>
+  <owl:equivalentProperty rdf:resource="http://snomed.info/id/prescribedTo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">onMedication</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="http://snomed.info/id/associatedWith">
+  <owl:equivalentProperty rdf:resource="#hasCondition"/>
+  <owl:equivalentProperty rdf:resource="http://hospital-b.org/clinical#hasDiagnosis"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">has clinical finding</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="http://snomed.info/id/consumes">
+  <owl:equivalentProperty rdf:resource="http://hospital-b.org/clinical#hasNutritionEntry"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">consumes substance</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="http://snomed.info/id/prescribedTo">
+  <owl:equivalentProperty rdf:resource="#hasPrescription"/>
+  <owl:equivalentProperty rdf:resource="http://hospital-b.org/clinical#onMedication"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">is prescribed product</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#seenBy">
+  <rdfs:domain rdf:resource="#EHR_Record"/>
+  <rdfs:range rdf:resource="#AttendingPhysician"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">seenBy</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="http://snomed.info/id/hasRisk">
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">has interaction risk</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#Strength">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Strength</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#FoodItem">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#NutritionEntry"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FoodItem</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#Gender">
+  <rdfs:domain rdf:resource="#EHR_Record"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gender</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#Subject_Ref">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Subject_Ref</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#ICDCode">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ICDCode</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#DrugName">
+  <rdfs:domain rdf:resource="#Prescription"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DrugName</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#DiagnosisText">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DiagnosisText</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#FullName">
+  <rdfs:domain rdf:resource="#EHR_Record"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FullName</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#Dosage">
+  <rdfs:domain rdf:resource="#Prescription"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dosage</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#DOB">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DOB</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#DateOfBirth">
+  <rdfs:domain rdf:resource="#EHR_Record"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DateOfBirth</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#Frequency">
+  <rdfs:domain rdf:resource="#Prescription"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Frequency</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#Sex">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sex</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#BloodType">
+  <rdfs:domain rdf:resource="#EHR_Record"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">BloodType</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#PatientID">
+  <rdfs:domain rdf:resource="#EHR_Record"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PatientID</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#Patient_Name">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Patient_Name</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="http://hospital-b.org/clinical#GenericName">
+  <rdfs:domain rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GenericName</rdfs:label>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="http://hospital-b.org/clinical#Medication">
+  <owl:equivalentClass rdf:resource="#Prescription"/>
+  <owl:equivalentClass rdf:resource="http://snomed.info/id/373873005"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Medication</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A medication in Hospital B's clinical records.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="http://hospital-b.org/clinical#NutritionEntry">
+  <owl:equivalentClass rdf:resource="http://snomed.info/id/105590001"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nutrition Entry</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A food item recorded in Hospital B's patient nutrition log.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="http://hospital-b.org/clinical#ClinicalSubject">
+  <owl:equivalentClass rdf:resource="#EHR_Record"/>
+  <owl:equivalentClass rdf:resource="http://snomed.info/id/125676002"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Clinical Subject</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A patient in Hospital B's clinical system, referred to as a 'subject'.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/387353006">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/373873005"/>
+  <rdfs:subClassOf rdf:resource="#Prescription"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Salbutamol</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://hospital-b.org/clinical#ClinicalOfficer">
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Clinical Officer</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Prescription">
+  <owl:equivalentClass rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <owl:equivalentClass rdf:resource="http://snomed.info/id/373873005"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Prescription</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A drug prescribed to a patient in Hospital A.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/7947003">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/397156001"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Aspirin</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/73211009">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/404684003"/>
+  <rdfs:subClassOf rdf:resource="#Condition"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Diabetes mellitus</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/404684003">
+  <owl:equivalentClass rdf:resource="#Condition"/>
+  <owl:equivalentClass rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Clinical finding (Disease)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#EHR_Record">
+  <owl:equivalentClass rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <owl:equivalentClass rdf:resource="http://snomed.info/id/125676002"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EHR Record</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A patient record in Hospital A's Electronic Health Record system.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Condition">
+  <owl:equivalentClass rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <owl:equivalentClass rdf:resource="http://snomed.info/id/404684003"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Condition</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A medical condition as recorded in Hospital A's EHR.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/38341003">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/404684003"/>
+  <rdfs:subClassOf rdf:resource="#Condition"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hypertension</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/BleedingRisk">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/InteractionAlert"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bleeding Risk (Warfarin + Grapefruit)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/InteractionAlert">
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dangerous Interaction Risk</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/195967001">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/404684003"/>
+  <rdfs:subClassOf rdf:resource="#Condition"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Asthma</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/373873005">
+  <owl:equivalentClass rdf:resource="#Prescription"/>
+  <owl:equivalentClass rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Pharmaceutical / biologic product</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/397156001">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/373873005"/>
+  <rdfs:subClassOf rdf:resource="#Prescription"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">NSAID (Non-steroidal anti-inflammatory drug)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/387207008">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/397156001"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ibuprofen</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/110540003">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/105590001"/>
+  <rdfs:subClassOf rdf:resource="http://hospital-b.org/clinical#NutritionEntry"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grapefruit</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/125676002">
+  <owl:equivalentClass rdf:resource="#EHR_Record"/>
+  <owl:equivalentClass rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Person (Patient/Subject)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/372567009">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/373873005"/>
+  <rdfs:subClassOf rdf:resource="#Prescription"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Metformin</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://hospital-b.org/clinical#Diagnosis">
+  <owl:equivalentClass rdf:resource="#Condition"/>
+  <owl:equivalentClass rdf:resource="http://snomed.info/id/404684003"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Diagnosis</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A clinical diagnosis, typically coded using ICD-10 codes.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/372706001">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/373873005"/>
+  <rdfs:subClassOf rdf:resource="#Prescription"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lisinopril</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/372605008">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/373873005"/>
+  <rdfs:subClassOf rdf:resource="#Prescription"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Amlodipine</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#AttendingPhysician">
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Attending Physician</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/105590001">
+  <owl:equivalentClass rdf:resource="http://hospital-b.org/clinical#NutritionEntry"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Substance (Food)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/709044004">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/404684003"/>
+  <rdfs:subClassOf rdf:resource="#Condition"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Chronic kidney disease</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/372804008">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/373873005"/>
+  <rdfs:subClassOf rdf:resource="#Prescription"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Warfarin</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/HypotensionRisk">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/InteractionAlert"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hypotension Risk (Amlodipine + Grapefruit)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/BronchospasmRisk">
+  <rdfs:subClassOf rdf:resource="http://snomed.info/id/InteractionAlert"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bronchospasm Risk (NSAID + Asthma)</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/HypotensionRiskPatient">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="http://snomed.info/id/125676002"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://snomed.info/id/prescribedTo"/>
+          <owl:someValuesFrom rdf:resource="http://snomed.info/id/372605008"/>
+        </owl:Restriction>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://snomed.info/id/consumes"/>
+          <owl:someValuesFrom rdf:resource="http://snomed.info/id/110540003"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf rdf:resource="#EHR_Record"/>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/BleedingRiskPatient">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="http://snomed.info/id/125676002"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://snomed.info/id/prescribedTo"/>
+          <owl:someValuesFrom rdf:resource="http://snomed.info/id/372804008"/>
+        </owl:Restriction>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://snomed.info/id/consumes"/>
+          <owl:someValuesFrom rdf:resource="http://snomed.info/id/110540003"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf rdf:resource="#EHR_Record"/>
+</owl:Class>
+
+<owl:Class rdf:about="http://snomed.info/id/BronchospasmRiskPatient">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="http://snomed.info/id/125676002"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://snomed.info/id/prescribedTo"/>
+          <owl:someValuesFrom rdf:resource="http://snomed.info/id/397156001"/>
+        </owl:Restriction>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://snomed.info/id/associatedWith"/>
+          <owl:someValuesFrom rdf:resource="http://snomed.info/id/195967001"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf rdf:resource="#EHR_Record"/>
+</owl:Class>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#SalbutamolSulfate">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdf:type rdf:resource="http://snomed.info/id/387353006"/>
+  <clin:GenericName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Salbutamol Sulfate</clin:GenericName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Aspirin">
+  <rdf:type rdf:resource="#Prescription"/>
+  <rdf:type rdf:resource="http://snomed.info/id/7947003"/>
+  <DrugName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Aspirin</DrugName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Hypertension">
+  <rdf:type rdf:resource="#Condition"/>
+  <rdf:type rdf:resource="http://snomed.info/id/38341003"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hypertension</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#ChronicKidneyDisease">
+  <rdf:type rdf:resource="#Condition"/>
+  <rdf:type rdf:resource="http://snomed.info/id/709044004"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Chronic Kidney Disease</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Lisinopril">
+  <rdf:type rdf:resource="#Prescription"/>
+  <rdf:type rdf:resource="http://snomed.info/id/372706001"/>
+  <DrugName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lisinopril</DrugName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Asthma">
+  <rdf:type rdf:resource="#Condition"/>
+  <rdf:type rdf:resource="http://snomed.info/id/195967001"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Asthma</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Salbutamol">
+  <rdf:type rdf:resource="#Prescription"/>
+  <rdf:type rdf:resource="http://snomed.info/id/387353006"/>
+  <DrugName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Salbutamol</DrugName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#EssentialHypertension">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <rdf:type rdf:resource="http://snomed.info/id/38341003"/>
+  <clin:ICDCode rdf:datatype="http://www.w3.org/2001/XMLSchema#string">I10</clin:ICDCode>
+  <clin:DiagnosisText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Essential hypertension</clin:DiagnosisText>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#Amlodipine">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdf:type rdf:resource="http://snomed.info/id/372605008"/>
+  <clin:GenericName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Amlodipine</clin:GenericName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#Grapefruit">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#NutritionEntry"/>
+  <rdf:type rdf:resource="http://snomed.info/id/110540003"/>
+  <clin:FoodItem rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grapefruit</clin:FoodItem>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Metformin">
+  <rdf:type rdf:resource="#Prescription"/>
+  <rdf:type rdf:resource="http://snomed.info/id/372567009"/>
+  <DrugName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Metformin</DrugName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#Ibuprofen">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdf:type rdf:resource="http://snomed.info/id/387207008"/>
+  <clin:GenericName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ibuprofen</clin:GenericName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#Lisinopril">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdf:type rdf:resource="http://snomed.info/id/372706001"/>
+  <clin:GenericName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lisinopril</clin:GenericName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#BronchialAsthma">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <rdf:type rdf:resource="http://snomed.info/id/195967001"/>
+  <clin:ICDCode rdf:datatype="http://www.w3.org/2001/XMLSchema#string">J45</clin:ICDCode>
+  <clin:DiagnosisText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bronchial asthma</clin:DiagnosisText>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#AdultOnsetDiabetes">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <rdf:type rdf:resource="http://snomed.info/id/73211009"/>
+  <clin:ICDCode rdf:datatype="http://www.w3.org/2001/XMLSchema#string">E11</clin:ICDCode>
+  <clin:DiagnosisText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Adult-onset diabetes</clin:DiagnosisText>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#GrapefruitJuice">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#NutritionEntry"/>
+  <rdf:type rdf:resource="http://snomed.info/id/110540003"/>
+  <clin:FoodItem rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Grapefruit Juice</clin:FoodItem>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#ChronicRenalFailure">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Diagnosis"/>
+  <rdf:type rdf:resource="http://snomed.info/id/709044004"/>
+  <clin:ICDCode rdf:datatype="http://www.w3.org/2001/XMLSchema#string">N18</clin:ICDCode>
+  <clin:DiagnosisText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Chronic renal failure</clin:DiagnosisText>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#AcetylsalicylicAcid">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdf:type rdf:resource="http://snomed.info/id/7947003"/>
+  <clin:GenericName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Acetylsalicylic Acid</clin:GenericName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="http://hospital-b.org/clinical#MetforminHydrochloride">
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#Medication"/>
+  <rdf:type rdf:resource="http://snomed.info/id/372567009"/>
+  <clin:GenericName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Metformin Hydrochloride</clin:GenericName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#DiabetesType2">
+  <rdf:type rdf:resource="#Condition"/>
+  <rdf:type rdf:resource="http://snomed.info/id/73211009"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Diabetes Type 2</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ibuprofen">
+  <rdf:type rdf:resource="#Prescription"/>
+  <rdf:type rdf:resource="http://snomed.info/id/387207008"/>
+  <DrugName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ibuprofen</DrugName>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Warfarin">
+  <rdf:type rdf:resource="#Prescription"/>
+  <rdf:type rdf:resource="http://snomed.info/id/372804008"/>
+  <DrugName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Warfarin</DrugName>
+</owl:NamedIndividual>
+
+<EHR_Record rdf:about="http://hospital-a.org/patient#P_102">
+  <hasCondition rdf:resource="#Hypertension"/>
+  <hasCondition rdf:resource="#ChronicKidneyDisease"/>
+  <hasPrescription rdf:resource="#Lisinopril"/>
+  <hasPrescription rdf:resource="#Aspirin"/>
+  <rdf:type rdf:resource="http://snomed.info/id/125676002"/>
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#ChronicRenalFailure"/>
+  <clin:hasDiagnosis rdf:resource="#Hypertension"/>
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#EssentialHypertension"/>
+  <clin:hasDiagnosis rdf:resource="#ChronicKidneyDisease"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#Lisinopril"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#AcetylsalicylicAcid"/>
+  <id:prescribedTo rdf:resource="#Lisinopril"/>
+  <id:prescribedTo rdf:resource="#Aspirin"/>
+  <FullName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bob Johnson</FullName>
+</EHR_Record>
+
+<EHR_Record rdf:about="http://hospital-a.org/patient#P_103">
+  <hasCondition rdf:resource="#Asthma"/>
+  <hasPrescription rdf:resource="#Salbutamol"/>
+  <rdf:type rdf:resource="http://snomed.info/id/125676002"/>
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <clin:hasDiagnosis rdf:resource="#Asthma"/>
+  <id:prescribedTo rdf:resource="#Salbutamol"/>
+  <FullName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Carol White</FullName>
+</EHR_Record>
+
+<clin:ClinicalSubject rdf:about="http://hospital-b.org/patient#MK_2024_004">
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#EssentialHypertension"/>
+  <clin:onMedication rdf:resource="http://hospital-b.org/clinical#Amlodipine"/>
+  <clin:hasNutritionEntry rdf:resource="http://hospital-b.org/clinical#Grapefruit"/>
+  <rdf:type rdf:resource="http://snomed.info/id/HypotensionRiskPatient"/>
+  <id:consumes rdf:resource="http://hospital-b.org/clinical#Grapefruit"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#Amlodipine"/>
+</clin:ClinicalSubject>
+
+<clin:ClinicalSubject rdf:about="http://hospital-b.org/patient#ET_2024_003">
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#BronchialAsthma"/>
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#AdultOnsetDiabetes"/>
+  <clin:onMedication rdf:resource="http://hospital-b.org/clinical#SalbutamolSulfate"/>
+  <clin:onMedication rdf:resource="http://hospital-b.org/clinical#Ibuprofen"/>
+  <rdf:type rdf:resource="http://snomed.info/id/BronchospasmRiskPatient"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#SalbutamolSulfate"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#Ibuprofen"/>
+</clin:ClinicalSubject>
+
+<clin:ClinicalSubject rdf:about="http://hospital-b.org/patient#BJ_2024_002">
+  <owl:sameAs rdf:resource="http://hospital-a.org/patient#P_102"/>
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#EssentialHypertension"/>
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#ChronicRenalFailure"/>
+  <clin:onMedication rdf:resource="http://hospital-b.org/clinical#Lisinopril"/>
+  <clin:onMedication rdf:resource="http://hospital-b.org/clinical#AcetylsalicylicAcid"/>
+  <rdf:type rdf:resource="http://snomed.info/id/125676002"/>
+  <rdf:type rdf:resource="#EHR_Record"/>
+  <clin:hasDiagnosis rdf:resource="#Hypertension"/>
+  <clin:hasDiagnosis rdf:resource="#ChronicKidneyDisease"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#Lisinopril"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#AcetylsalicylicAcid"/>
+  <id:prescribedTo rdf:resource="#Lisinopril"/>
+  <id:prescribedTo rdf:resource="#Aspirin"/>
+</clin:ClinicalSubject>
+
+<clin:ClinicalSubject rdf:about="http://hospital-b.org/patient#AS_2024_001">
+  <owl:sameAs rdf:resource="http://hospital-a.org/patient#P_101"/>
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#AdultOnsetDiabetes"/>
+  <clin:onMedication rdf:resource="http://hospital-b.org/clinical#MetforminHydrochloride"/>
+  <clin:hasNutritionEntry rdf:resource="http://hospital-b.org/clinical#GrapefruitJuice"/>
+  <rdf:type rdf:resource="http://snomed.info/id/BleedingRiskPatient"/>
+  <id:consumes rdf:resource="http://hospital-b.org/clinical#GrapefruitJuice"/>
+  <clin:hasDiagnosis rdf:resource="#DiabetesType2"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#MetforminHydrochloride"/>
+  <id:prescribedTo rdf:resource="#Metformin"/>
+  <id:prescribedTo rdf:resource="#Warfarin"/>
+</clin:ClinicalSubject>
+
+<EHR_Record rdf:about="http://hospital-a.org/patient#P_101">
+  <hasCondition rdf:resource="#DiabetesType2"/>
+  <hasPrescription rdf:resource="#Metformin"/>
+  <hasPrescription rdf:resource="#Warfarin"/>
+  <rdf:type rdf:resource="http://snomed.info/id/BleedingRiskPatient"/>
+  <id:consumes rdf:resource="http://hospital-b.org/clinical#GrapefruitJuice"/>
+  <clin:hasDiagnosis rdf:resource="#DiabetesType2"/>
+  <clin:hasDiagnosis rdf:resource="http://hospital-b.org/clinical#AdultOnsetDiabetes"/>
+  <id:prescribedTo rdf:resource="http://hospital-b.org/clinical#MetforminHydrochloride"/>
+  <id:prescribedTo rdf:resource="#Metformin"/>
+  <id:prescribedTo rdf:resource="#Warfarin"/>
+  <FullName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Alice Smith</FullName>
+</EHR_Record>
+
+<EHR_Record rdf:about="http://hospital-a.org/patient#P_104">
+  <hasCondition rdf:resource="#DiabetesType2"/>
+  <hasCondition rdf:resource="#Hypertension"/>
+  <hasPrescription rdf:resource="#Ibuprofen"/>
+  <hasPrescription rdf:resource="#Metformin"/>
+  <rdf:type rdf:resource="http://snomed.info/id/125676002"/>
+  <rdf:type rdf:resource="http://hospital-b.org/clinical#ClinicalSubject"/>
+  <clin:hasDiagnosis rdf:resource="#DiabetesType2"/>
+  <clin:hasDiagnosis rdf:resource="#Hypertension"/>
+  <id:prescribedTo rdf:resource="#Ibuprofen"/>
+  <id:prescribedTo rdf:resource="#Metformin"/>
+  <FullName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">David Lee</FullName>
+</EHR_Record>
+
+
+</rdf:RDF>

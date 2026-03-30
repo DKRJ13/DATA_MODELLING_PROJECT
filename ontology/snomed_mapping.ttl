@@ -1,0 +1,135 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+@prefix clin: <http://hospital-b.org/clinical#> .
+@prefix ehr:  <http://hospital-a.org/ehr#> .
+@prefix sct:  <http://snomed.info/id/> .
+@prefix rules:<http://medonto.org/rules#> .
+
+# ─────────────────────────────────────────────────────────────
+#  SNOMED INTEGRATION & RULE MAPPING
+#  This file acts as the semantic "glue". It imports both local
+#  hospital ontologies and maps them to SNOMED CT (sct:).
+#  It also contains the OWL rules that the Reasoner applies automatically.
+# ─────────────────────────────────────────────────────────────
+<http://medonto.org/snomed-mapping>
+    rdf:type owl:Ontology ;
+    owl:imports <http://hospital-a.org/ehr> ;
+    owl:imports <http://hospital-b.org/clinical> ;
+    owl:imports <http://snomed.info/id/core> .
+
+
+# ──────────────────────────────────────────────
+#  CLASS MAPPINGS (owl:equivalentClass)
+# ──────────────────────────────────────────────
+
+sct:125676002 owl:equivalentClass ehr:EHR_Record .         # Patient
+sct:125676002 owl:equivalentClass clin:ClinicalSubject .
+
+sct:404684003 owl:equivalentClass ehr:Condition .          # Disease
+sct:404684003 owl:equivalentClass clin:Diagnosis .
+
+sct:373873005 owl:equivalentClass ehr:Prescription .       # Drug
+sct:373873005 owl:equivalentClass clin:Medication .
+
+sct:105590001 owl:equivalentClass clin:NutritionEntry .    # Food
+
+
+# ──────────────────────────────────────────────
+#  PROPERTY MAPPINGS (owl:equivalentProperty)
+# ──────────────────────────────────────────────
+
+sct:associatedWith owl:equivalentProperty ehr:hasCondition .
+sct:associatedWith owl:equivalentProperty clin:hasDiagnosis .
+
+sct:prescribedTo owl:equivalentProperty ehr:hasPrescription .
+sct:prescribedTo owl:equivalentProperty clin:onMedication .
+
+sct:consumes owl:equivalentProperty clin:hasNutritionEntry .
+
+
+# ──────────────────────────────────────────────
+#  INSTANCE MAPPINGS (Data -> SNOMED Classes)
+#  Unlike before where we used owl:sameAs for NamedIndividuals,
+#  here we state that the specific instances from hospitals
+#  simply belong to the SNOMED subclasses via rdf:type.
+#  e.g., Hospital A's "Aspirin" IS A sct:7947003 (Aspirin product)
+# ──────────────────────────────────────────────
+
+ehr:DiabetesType2        rdf:type sct:73211009 .
+clin:AdultOnsetDiabetes  rdf:type sct:73211009 .
+
+ehr:Hypertension             rdf:type sct:38341003 .
+clin:EssentialHypertension   rdf:type sct:38341003 .
+
+ehr:ChronicKidneyDisease     rdf:type sct:709044004 .
+clin:ChronicRenalFailure     rdf:type sct:709044004 .
+
+ehr:Asthma               rdf:type sct:195967001 .
+clin:BronchialAsthma     rdf:type sct:195967001 .
+
+# Drugs
+ehr:Aspirin               rdf:type sct:7947003 .
+clin:AcetylsalicylicAcid  rdf:type sct:7947003 .
+
+ehr:Ibuprofen             rdf:type sct:387207008 .
+clin:Ibuprofen            rdf:type sct:387207008 .
+
+ehr:Warfarin              rdf:type sct:372804008 .
+ehr:Metformin             rdf:type sct:372567009 .
+clin:MetforminHydrochloride rdf:type sct:372567009 .
+
+ehr:Lisinopril            rdf:type sct:372706001 .
+clin:Lisinopril           rdf:type sct:372706001 .
+
+ehr:Salbutamol            rdf:type sct:387353006 .
+clin:SalbutamolSulfate    rdf:type sct:387353006 .
+
+clin:Amlodipine           rdf:type sct:372605008 .
+
+# Food
+clin:Grapefruit           rdf:type sct:110540003 .
+clin:GrapefruitJuice      rdf:type sct:110540003 .
+
+
+# ──────────────────────────────────────────────
+#  REASONER RULES (General Class Axioms)
+#  Instead of SPARQL, we tell the Reasoner:
+#  "Any Patient that has (Prescription=Warfarin) AND (Consumes=Grapefruit)
+#   is automatically classified as having BleedingRisk."
+# ──────────────────────────────────────────────
+
+# Rule 1: Warfarin + Grapefruit -> Bleeding Risk
+sct:BleedingRiskPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            sct:125676002 # Patient
+            [ rdf:type owl:Restriction ; owl:onProperty sct:prescribedTo ; owl:someValuesFrom sct:372804008 ] # Warfarin
+            [ rdf:type owl:Restriction ; owl:onProperty sct:consumes     ; owl:someValuesFrom sct:110540003 ] # Grapefruit
+        )
+    ] .
+
+# Rule 2: Amlodipine + Grapefruit -> Hypotension Risk
+sct:HypotensionRiskPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            sct:125676002 # Patient
+            [ rdf:type owl:Restriction ; owl:onProperty sct:prescribedTo ; owl:someValuesFrom sct:372605008 ] # Amlodipine
+            [ rdf:type owl:Restriction ; owl:onProperty sct:consumes     ; owl:someValuesFrom sct:110540003 ] # Grapefruit
+        )
+    ] .
+
+# Rule 3: NSAID + Asthma -> Bronchospasm Risk
+# Note: It checks the parent NSAID class (sct:397156001), not just specific drugs
+sct:BronchospasmRiskPatient rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            sct:125676002 # Patient
+            [ rdf:type owl:Restriction ; owl:onProperty sct:prescribedTo ; owl:someValuesFrom sct:397156001 ] # Any NSAID
+            [ rdf:type owl:Restriction ; owl:onProperty sct:associatedWith ; owl:someValuesFrom sct:195967001 ] # Asthma
+        )
+    ] .

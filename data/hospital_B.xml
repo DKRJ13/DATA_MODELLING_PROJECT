@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    HOSPITAL B - "Metro Clinical Centre"
+    Format: Clinical style (very different tags and terminology from Hospital A)
+    Notice:
+      - Uses <Subject_Ref> instead of <PatientID>
+      - Uses <Patient_Name> with "Surname, Firstname" format
+      - Uses ICD-10 codes for diagnoses
+      - Uses generic drug names differently
+      - Also has a NUTRITION LOG — this is what will trigger the drug-interaction inference
+-->
+<ClinicalDatabase>
+
+    <ClinicalRecord ref="AS-2024-001">
+        <Patient_Name>Smith, Alice</Patient_Name>
+        <DOB>14/06/1985</DOB>
+        <Sex>F</Sex>
+        <Diagnosis code="E11">Adult-onset diabetes</Diagnosis>
+        <Medication>
+            <GenericName>Metformin Hydrochloride</GenericName>
+            <Strength>500mg</Strength>
+            <Route>Oral</Route>
+        </Medication>
+        <!-- Alice is also on Warfarin in Hospital A, and here Hospital B tracks her nutrition -->
+        <NutritionLog>
+            <FoodItem>Grapefruit Juice</FoodItem>
+            <Frequency>Daily</Frequency>
+            <Notes>Patient reports consuming every morning</Notes>
+        </NutritionLog>
+        <ClinicalOfficer>Connor, Sarah MD</ClinicalOfficer>
+    </ClinicalRecord>
+
+    <ClinicalRecord ref="BJ-2024-002">
+        <Patient_Name>Johnson, Bob</Patient_Name>
+        <DOB>03/11/1972</DOB>
+        <Sex>M</Sex>
+        <Diagnosis code="I10">Essential hypertension</Diagnosis>
+        <Diagnosis code="N18">Chronic renal failure</Diagnosis>
+        <Medication>
+            <GenericName>Lisinopril</GenericName>
+            <Strength>10mg</Strength>
+            <Route>Oral</Route>
+        </Medication>
+        <Medication>
+            <GenericName>Acetylsalicylic Acid</GenericName>
+            <Strength>81mg</Strength>
+            <Route>Oral</Route>
+        </Medication>
+        <ClinicalOfficer>Wilson, James MD</ClinicalOfficer>
+    </ClinicalRecord>
+
+    <ClinicalRecord ref="ET-2024-003">
+        <Patient_Name>Turner, Emily</Patient_Name>
+        <DOB>05/07/1988</DOB>
+        <Sex>F</Sex>
+        <Diagnosis code="J45">Bronchial asthma</Diagnosis>
+        <Diagnosis code="E11">Adult-onset diabetes</Diagnosis>
+        <Medication>
+            <GenericName>Salbutamol Sulfate</GenericName>
+            <Strength>100mcg</Strength>
+            <Route>Inhaled</Route>
+        </Medication>
+        <Medication>
+            <GenericName>Ibuprofen</GenericName>
+            <Strength>200mg</Strength>
+            <Route>Oral</Route>
+        </Medication>
+        <!-- Ibuprofen + Asthma = known risk, OWL reasoner should flag this -->
+        <ClinicalOfficer>Patel, Riya MD</ClinicalOfficer>
+    </ClinicalRecord>
+
+    <ClinicalRecord ref="MK-2024-004">
+        <Patient_Name>Kumar, Mohan</Patient_Name>
+        <DOB>22/04/1955</DOB>
+        <Sex>M</Sex>
+        <Diagnosis code="I10">Essential hypertension</Diagnosis>
+        <Medication>
+            <GenericName>Amlodipine</GenericName>
+            <Strength>5mg</Strength>
+            <Route>Oral</Route>
+        </Medication>
+        <NutritionLog>
+            <FoodItem>Grapefruit</FoodItem>
+            <Frequency>Daily</Frequency>
+            <Notes>Eats grapefruit for breakfast regularly</Notes>
+        </NutritionLog>
+        <!-- Amlodipine + Grapefruit = known CYP3A4 interaction, OWL should flag this -->
+        <ClinicalOfficer>Patel, Riya MD</ClinicalOfficer>
+    </ClinicalRecord>
+
+</ClinicalDatabase>

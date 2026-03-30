@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    HOSPITAL A - "City General Hospital"
+    Format: EHR (Electronic Health Record) style
+    Notice: Uses tags like <FullName>, <Condition>, <DrugName>
+-->
+<EHR_Database>
+
+    <EHR_Record id="P-101">
+        <FullName>Alice Smith</FullName>
+        <DateOfBirth>1985-06-14</DateOfBirth>
+        <Gender>Female</Gender>
+        <BloodType>A+</BloodType>
+        <Condition>Diabetes Type 2</Condition>
+        <Prescription>
+            <DrugName>Metformin</DrugName>
+            <Dosage>500mg</Dosage>
+            <Frequency>Twice Daily</Frequency>
+        </Prescription>
+        <Prescription>
+            <DrugName>Warfarin</DrugName>
+            <Dosage>5mg</Dosage>
+            <Frequency>Once Daily</Frequency>
+        </Prescription>
+        <AttendingPhysician>Dr. Sarah Connor</AttendingPhysician>
+    </EHR_Record>
+
+    <EHR_Record id="P-102">
+        <FullName>Bob Johnson</FullName>
+        <DateOfBirth>1972-11-03</DateOfBirth>
+        <Gender>Male</Gender>
+        <BloodType>O-</BloodType>
+        <Condition>Hypertension</Condition>
+        <Condition>Chronic Kidney Disease</Condition>
+        <Prescription>
+            <DrugName>Lisinopril</DrugName>
+            <Dosage>10mg</Dosage>
+            <Frequency>Once Daily</Frequency>
+        </Prescription>
+        <Prescription>
+            <DrugName>Aspirin</DrugName>
+            <Dosage>81mg</Dosage>
+            <Frequency>Once Daily</Frequency>
+        </Prescription>
+        <AttendingPhysician>Dr. James Wilson</AttendingPhysician>
+    </EHR_Record>
+
+    <EHR_Record id="P-103">
+        <FullName>Carol White</FullName>
+        <DateOfBirth>1990-02-28</DateOfBirth>
+        <Gender>Female</Gender>
+        <BloodType>B+</BloodType>
+        <Condition>Asthma</Condition>
+        <Prescription>
+            <DrugName>Salbutamol</DrugName>
+            <Dosage>100mcg</Dosage>
+            <Frequency>As needed</Frequency>
+        </Prescription>
+        <AttendingPhysician>Dr. Sarah Connor</AttendingPhysician>
+    </EHR_Record>
+
+    <EHR_Record id="P-104">
+        <FullName>David Lee</FullName>
+        <DateOfBirth>1965-09-17</DateOfBirth>
+        <Gender>Male</Gender>
+        <BloodType>AB+</BloodType>
+        <Condition>Diabetes Type 2</Condition>
+        <Condition>Hypertension</Condition>
+        <Prescription>
+            <DrugName>Ibuprofen</DrugName>
+            <Dosage>400mg</Dosage>
+            <Frequency>Three times daily</Frequency>
+        </Prescription>
+        <Prescription>
+            <DrugName>Metformin</DrugName>
+            <Dosage>1000mg</Dosage>
+            <Frequency>Twice Daily</Frequency>
+        </Prescription>
+        <AttendingPhysician>Dr. James Wilson</AttendingPhysician>
+    </EHR_Record>
+
+</EHR_Database>

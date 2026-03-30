@@ -1,0 +1,153 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Hospital A's LOCAL namespace — everything here is A-specific terminology
+@prefix ehr:  <http://hospital-a.org/ehr#> .
+
+# ─────────────────────────────────────────────────────────────
+#  ONTOLOGY A — "City General Hospital" Local Schema
+#
+#  This file describes ONLY how Hospital A structures its data.
+#  It uses EHR (Electronic Health Record) terminology.
+#  It knows NOTHING about Hospital B or any global standard.
+#  This is what the Hospital A "team" would build independently.
+# ─────────────────────────────────────────────────────────────
+<http://hospital-a.org/ehr>
+    rdf:type owl:Ontology ;
+    rdfs:label "Hospital A — EHR Local Ontology" ;
+    rdfs:comment "Local schema for City General Hospital. Uses EHR terminology." .
+
+
+# ──────────────────────────────────────────────
+#  CLASSES  (Hospital A's vocabulary)
+# ──────────────────────────────────────────────
+
+# Hospital A calls patients "EHR_Record" objects
+ehr:EHR_Record rdf:type owl:Class ;
+    rdfs:label "EHR Record" ;
+    rdfs:comment "A patient record in Hospital A's Electronic Health Record system." .
+
+# Hospital A groups conditions under this class
+ehr:Condition rdf:type owl:Class ;
+    rdfs:label "Condition" ;
+    rdfs:comment "A medical condition as recorded in Hospital A's EHR." .
+
+# Hospital A groups drugs under Prescription
+ehr:Prescription rdf:type owl:Class ;
+    rdfs:label "Prescription" ;
+    rdfs:comment "A drug prescribed to a patient in Hospital A." .
+
+# Hospital A tracks attending physicians
+ehr:AttendingPhysician rdf:type owl:Class ;
+    rdfs:label "Attending Physician" .
+
+
+# ──────────────────────────────────────────────
+#  DATA PROPERTIES  (Hospital A's field names)
+# ──────────────────────────────────────────────
+
+# Note: Hospital A uses <FullName> — completely different from Hospital B's <Patient_Name>
+ehr:FullName rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range  xsd:string ;
+    rdfs:label "FullName" .
+
+ehr:PatientID rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range  xsd:string ;
+    rdfs:label "PatientID" .
+
+ehr:DateOfBirth rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range  xsd:string ;
+    rdfs:label "DateOfBirth" .
+
+ehr:Gender rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range  xsd:string ;
+    rdfs:label "Gender" .
+
+ehr:BloodType rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range  xsd:string ;
+    rdfs:label "BloodType" .
+
+ehr:DrugName rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:Prescription ;
+    rdfs:range  xsd:string ;
+    rdfs:label "DrugName" .
+
+ehr:Dosage rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:Prescription ;
+    rdfs:range  xsd:string ;
+    rdfs:label "Dosage" .
+
+ehr:Frequency rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:Prescription ;
+    rdfs:range  xsd:string ;
+    rdfs:label "Frequency" .
+
+
+# ──────────────────────────────────────────────
+#  OBJECT PROPERTIES  (Hospital A's relationships)
+# ──────────────────────────────────────────────
+
+# Hospital A uses "hasCondition" to link patient → condition
+ehr:hasCondition rdf:type owl:ObjectProperty ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range  ehr:Condition ;
+    rdfs:label "hasCondition" .
+
+# Hospital A uses "hasPrescription" to link patient → drug
+ehr:hasPrescription rdf:type owl:ObjectProperty ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range  ehr:Prescription ;
+    rdfs:label "hasPrescription" .
+
+# Hospital A uses "seenBy" to link patient → doctor
+ehr:seenBy rdf:type owl:ObjectProperty ;
+    rdfs:domain ehr:EHR_Record ;
+    rdfs:range  ehr:AttendingPhysician ;
+    rdfs:label "seenBy" .
+
+
+# ──────────────────────────────────────────────
+#  CONDITION INSTANCES  (Hospital A's terminology)
+# ──────────────────────────────────────────────
+
+ehr:DiabetesType2 rdf:type owl:NamedIndividual , ehr:Condition ;
+    rdfs:label "Diabetes Type 2" .
+
+ehr:Hypertension rdf:type owl:NamedIndividual , ehr:Condition ;
+    rdfs:label "Hypertension" .
+
+ehr:ChronicKidneyDisease rdf:type owl:NamedIndividual , ehr:Condition ;
+    rdfs:label "Chronic Kidney Disease" .
+
+ehr:Asthma rdf:type owl:NamedIndividual , ehr:Condition ;
+    rdfs:label "Asthma" .
+
+
+# ──────────────────────────────────────────────
+#  DRUG INSTANCES  (Hospital A's drug names)
+# ──────────────────────────────────────────────
+
+ehr:Warfarin rdf:type owl:NamedIndividual , ehr:Prescription ;
+    ehr:DrugName "Warfarin" .
+
+ehr:Metformin rdf:type owl:NamedIndividual , ehr:Prescription ;
+    ehr:DrugName "Metformin" .
+
+ehr:Aspirin rdf:type owl:NamedIndividual , ehr:Prescription ;
+    ehr:DrugName "Aspirin" .
+
+ehr:Ibuprofen rdf:type owl:NamedIndividual , ehr:Prescription ;
+    ehr:DrugName "Ibuprofen" .
+
+ehr:Lisinopril rdf:type owl:NamedIndividual , ehr:Prescription ;
+    ehr:DrugName "Lisinopril" .
+
+ehr:Salbutamol rdf:type owl:NamedIndividual , ehr:Prescription ;
+    ehr:DrugName "Salbutamol" .
