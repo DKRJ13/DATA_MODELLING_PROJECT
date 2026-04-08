@@ -43,15 +43,17 @@ sct:associatedWith owl:equivalentProperty clin:hasDiagnosis .
 sct:prescribedTo owl:equivalentProperty ehr:hasPrescription .
 sct:prescribedTo owl:equivalentProperty clin:onMedication .
 
-sct:consumes owl:equivalentProperty clin:hasNutritionEntry .
+sct:consumes owl:eßquivalentProperty clin:hasNutritionEntry .
 
 sct:hasBiologicalParent rdf:type owl:ObjectProperty ;
-    owl:equivalentProperty ehr:hasParent ;
+    owl:equivalentPropertƒy ehr:hasParent ;
     owl:equivalentProperty clin:hasBiologicalParent .
 
 sct:hasBiologicalAncestor rdf:type owl:TransitiveProperty, owl:ObjectProperty ;
     owl:equivalentProperty ehr:hasAncestor ;
     owl:equivalentProperty clin:hasBiologicalAncestor .
+
+ehr:seenBy owl:equivalentProperty clin:underCareOf .
 
 sct:hasGeneticDisease rdf:type owl:ObjectProperty ;
     owl:equivalentProperty ehr:hasGeneticCondition ;
@@ -105,12 +107,16 @@ clin:Amlodipine           rdf:type sct:372605008 .
 clin:Grapefruit           rdf:type sct:110540003 .
 clin:GrapefruitJuice      rdf:type sct:110540003 .
 
+# Genetics
+ehr:Huntingtons           rdf:type sct:58756001 .
+clin:HuntingtonsDisease   rdf:type sct:58756001 .
+
 
 #  REASONER RULES 
 #  "Any Patient that has (Prescription=Warfarin) AND (Consumes=Grapefruit)
 #   is automatically classified as having BleedingRisk."
 
-# Rule 1: Warfarin + Grapefruit -> Bleeding Risk
+# Rule 1: Warfarin + Grapefruit -> Bleeding Risƒk
 sct:BleedingRiskPatient rdf:type owl:Class ;
     owl:equivalentClass [
         rdf:type owl:Class ;

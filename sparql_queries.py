@@ -83,7 +83,59 @@ def run_queries():
         patient_uri = str(row.patient).split('#')[-1]
         print(f"  ⚕️ Patient {patient_uri} has Diabetes.")
         
+        
     if not found2: print("  No diabetic patients found.")
+
+    q3 = """
+    PREFIX clin: <http://hospital-b.org/clinical#>
+    PREFIX ehr: <http://hospital-a.org/ehr#>
+    
+    SELECT DISTINCT ?patientName ?doctorName WHERE {
+        ?patient a ehr:EHR_Record .
+        ?patient clin:eligibleForSecondOpinionFrom ?doctor .
+        
+        ?patient ehr:FullName ?patientName .
+        ?doctor clin:Patient_Name ?doctorName .
+    }
+    """
+    
+    print("\n" + "="*60)
+    print("QUERY 3: Cross-Hospital Rule Inheritance (Second Opinion)")
+    print("         (Hospital A inheriting rules defined only in Hospital B)")
+    print("="*60)
+    
+    found3 = False
+    for row in g.query(q3):
+        found3 = True
+        print(f"  🤝 Hospital A Patient '{row.patientName}' is eligible for a Second Opinion from '{row.doctorName}'!")
+    if not found3: print("  No Hospital A patients inherited the rule.")
+
+    q4 = """
+    PREFIX sct: <http://snomed.info/id/>
+    PREFIX ehr: <http://hospital-a.org/ehr#>
+    PREFIX clin: <http://hospital-b.org/clinical#>
+
+    SELECT DISTINCT ?patientName WHERE {
+        ?patient sct:hasRiskOfGeneticDisease ?diseaseInstance .
+        ?diseaseInstance a ?diseaseClass .
+        
+        # SNOMED ID for Huntington's chorea
+        FILTER (?diseaseClass = sct:58756001)
+
+        { ?patient ehr:FullName ?patientName } UNION { ?patient clin:Patient_Name ?patientName }
+    }
+    """
+    
+    print("\n" + "="*60)
+    print("QUERY 4: Genetic Ancestry Risk Inference")
+    print("         (Patients with biological ancestors who had Huntington's)")
+    print("="*60)
+    
+    found4 = False
+    for row in g.query(q4):
+        found4 = True
+        print(f"  🧬 Patient '{row.patientName}' has genetic risk of SNOMED:58756001 (Huntington's chorea)!")
+    if not found4: print("  No genetic risks found.")
 
     print("\n" + "="*60)
     print("✅ Queries completed.")
