@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    HOSPITAL B - "Metro Clinical Centre"
-    Format: Clinical style (very different tags and terminology from Hospital A)
-    Notice:
-      - Uses <Subject_Ref> instead of <PatientID>
-      - Uses <Patient_Name> with "Surname, Firstname" format
-      - Uses ICD-10 codes for diagnoses
-      - Uses generic drug names differently
-      - Also has a NUTRITION LOG — this is what will trigger the drug-interaction inference
--->
+
 <ClinicalDatabase>
+
+    <ClinicalRecord ref="AJ-1950-001">
+        <Patient_Name>Johnson, Arthur</Patient_Name>
+        <DOB>10/10/1950</DOB>
+        <Sex>M</Sex>
+        <GeneticDiagnosis code="G10">Huntington's chorea (disorder)</GeneticDiagnosis>
+    </ClinicalRecord>
 
     <ClinicalRecord ref="AS-2024-001">
         <Patient_Name>Smith, Alice</Patient_Name>
         <DOB>14/06/1985</DOB>
         <Sex>F</Sex>
+        <BMI>25.4</BMI>
         <Diagnosis code="E11">Adult-onset diabetes</Diagnosis>
         <Medication>
             <GenericName>Metformin Hydrochloride</GenericName>
@@ -28,12 +27,16 @@
             <Notes>Patient reports consuming every morning</Notes>
         </NutritionLog>
         <ClinicalOfficer>Connor, Sarah MD</ClinicalOfficer>
+        <DoctorConsultsWith>Patel, Riya MD</DoctorConsultsWith>
+        <FriendOfPatient>ET-2024-003</FriendOfPatient>
     </ClinicalRecord>
 
     <ClinicalRecord ref="BJ-2024-002">
         <Patient_Name>Johnson, Bob</Patient_Name>
         <DOB>03/11/1972</DOB>
         <Sex>M</Sex>
+        <BMI>31.2</BMI>
+        <BiologicalParent>AJ-1950-001</BiologicalParent>
         <Diagnosis code="I10">Essential hypertension</Diagnosis>
         <Diagnosis code="N18">Chronic renal failure</Diagnosis>
         <Medication>
@@ -53,6 +56,7 @@
         <Patient_Name>Turner, Emily</Patient_Name>
         <DOB>05/07/1988</DOB>
         <Sex>F</Sex>
+        <BMI>28.1</BMI>
         <Diagnosis code="J45">Bronchial asthma</Diagnosis>
         <Diagnosis code="E11">Adult-onset diabetes</Diagnosis>
         <Medication>
@@ -73,6 +77,7 @@
         <Patient_Name>Kumar, Mohan</Patient_Name>
         <DOB>22/04/1955</DOB>
         <Sex>M</Sex>
+        <BMI>26.8</BMI>
         <Diagnosis code="I10">Essential hypertension</Diagnosis>
         <Medication>
             <GenericName>Amlodipine</GenericName>

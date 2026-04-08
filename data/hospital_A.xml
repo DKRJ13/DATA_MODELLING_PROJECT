@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    HOSPITAL A - "City General Hospital"
-    Format: EHR (Electronic Health Record) style
-    Notice: Uses tags like <FullName>, <Condition>, <DrugName>
--->
+
 <EHR_Database>
+
+    <EHR_Record id="P-099">
+        <FullName>Genevieve Smith</FullName>
+        <DateOfBirth>1955-02-12</DateOfBirth>
+        <Gender>Female</Gender>
+        <BloodType>A+</BloodType>
+        <GeneticCondition>Huntington's chorea (disorder)</GeneticCondition>
+    </EHR_Record>
 
     <EHR_Record id="P-101">
         <FullName>Alice Smith</FullName>
         <DateOfBirth>1985-06-14</DateOfBirth>
         <Gender>Female</Gender>
         <BloodType>A+</BloodType>
+        <ParentID>P-099</ParentID>
         <Condition>Diabetes Type 2</Condition>
         <Prescription>
             <DrugName>Metformin</DrugName>

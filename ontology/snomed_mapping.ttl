@@ -7,12 +7,11 @@
 @prefix sct:  <http://snomed.info/id/> .
 @prefix rules:<http://medonto.org/rules#> .
 
-# ─────────────────────────────────────────────────────────────
 #  SNOMED INTEGRATION & RULE MAPPING
 #  This file acts as the semantic "glue". It imports both local
 #  hospital ontologies and maps them to SNOMED CT (sct:).
 #  It also contains the OWL rules that the Reasoner applies automatically.
-# ─────────────────────────────────────────────────────────────
+
 <http://medonto.org/snomed-mapping>
     rdf:type owl:Ontology ;
     owl:imports <http://hospital-a.org/ehr> ;
@@ -36,9 +35,7 @@ sct:373873005 owl:equivalentClass clin:Medication .
 sct:105590001 owl:equivalentClass clin:NutritionEntry .    # Food
 
 
-# ──────────────────────────────────────────────
 #  PROPERTY MAPPINGS (owl:equivalentProperty)
-# ──────────────────────────────────────────────
 
 sct:associatedWith owl:equivalentProperty ehr:hasCondition .
 sct:associatedWith owl:equivalentProperty clin:hasDiagnosis .
@@ -48,14 +45,30 @@ sct:prescribedTo owl:equivalentProperty clin:onMedication .
 
 sct:consumes owl:equivalentProperty clin:hasNutritionEntry .
 
+sct:hasBiologicalParent rdf:type owl:ObjectProperty ;
+    owl:equivalentProperty ehr:hasParent ;
+    owl:equivalentProperty clin:hasBiologicalParent .
 
-# ──────────────────────────────────────────────
+sct:hasBiologicalAncestor rdf:type owl:TransitiveProperty, owl:ObjectProperty ;
+    owl:equivalentProperty ehr:hasAncestor ;
+    owl:equivalentProperty clin:hasBiologicalAncestor .
+
+sct:hasGeneticDisease rdf:type owl:ObjectProperty ;
+    owl:equivalentProperty ehr:hasGeneticCondition ;
+    owl:equivalentProperty clin:hasGeneticDiagnosis .
+
+sct:hasRiskOfGeneticDisease rdf:type owl:ObjectProperty ;
+    # RULE 3: If Patient A -> hasBiologicalAncestor -> Patient B -> hasGeneticDisease -> Disease X
+    # Then Patient A -> hasRiskOfGeneticDisease -> Disease X
+    owl:propertyChainAxiom ( sct:hasBiologicalAncestor sct:hasGeneticDisease ) .
+
+
 #  INSTANCE MAPPINGS (Data -> SNOMED Classes)
 #  Unlike before where we used owl:sameAs for NamedIndividuals,
 #  here we state that the specific instances from hospitals
 #  simply belong to the SNOMED subclasses via rdf:type.
 #  e.g., Hospital A's "Aspirin" IS A sct:7947003 (Aspirin product)
-# ──────────────────────────────────────────────
+
 
 ehr:DiabetesType2        rdf:type sct:73211009 .
 clin:AdultOnsetDiabetes  rdf:type sct:73211009 .
@@ -93,12 +106,9 @@ clin:Grapefruit           rdf:type sct:110540003 .
 clin:GrapefruitJuice      rdf:type sct:110540003 .
 
 
-# ──────────────────────────────────────────────
-#  REASONER RULES (General Class Axioms)
-#  Instead of SPARQL, we tell the Reasoner:
+#  REASONER RULES 
 #  "Any Patient that has (Prescription=Warfarin) AND (Consumes=Grapefruit)
 #   is automatically classified as having BleedingRisk."
-# ──────────────────────────────────────────────
 
 # Rule 1: Warfarin + Grapefruit -> Bleeding Risk
 sct:BleedingRiskPatient rdf:type owl:Class ;

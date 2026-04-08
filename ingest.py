@@ -52,6 +52,7 @@ DRUG_MAP_A = {
 DISEASE_MAP_A = {
     "diabetes type 2": EHR.DiabetesType2, "hypertension": EHR.Hypertension,
     "chronic kidney disease": EHR.ChronicKidneyDisease, "asthma": EHR.Asthma,
+    "huntington's chorea (disorder)": EHR.Huntingtons,
 }
 
 DRUG_MAP_B = {
@@ -62,6 +63,7 @@ DRUG_MAP_B = {
 DISEASE_MAP_B = {
     "e11": CLIN.AdultOnsetDiabetes, "i10": CLIN.EssentialHypertension,
     "n18": CLIN.ChronicRenalFailure, "j45": CLIN.BronchialAsthma,
+    "g10": CLIN.HuntingtonsDisease,
 }
 FOOD_MAP_B = {
     "grapefruit": CLIN.Grapefruit, "grapefruit juice": CLIN.GrapefruitJuice,
@@ -102,6 +104,14 @@ def build_raw_graph():
             uri = DISEASE_MAP_A.get(normalize(cond.text))
             if uri: g.add((patient_uri, EHR.hasCondition, uri))
 
+        for gcond in record.findall("GeneticCondition"):
+            uri = DISEASE_MAP_A.get(normalize(gcond.text))
+            if uri: g.add((patient_uri, EHR.hasGeneticCondition, uri))
+
+        for parent in record.findall("ParentID"):
+            p_uri = HOSP_A_INST[safe_uri(parent.text)]
+            g.add((patient_uri, EHR.hasParent, p_uri))
+
         for rx in record.findall("Prescription"):
             uri = DRUG_MAP_A.get(normalize(rx.findtext("DrugName", "")))
             if uri: g.add((patient_uri, EHR.hasPrescription, uri))
@@ -114,11 +124,22 @@ def build_raw_graph():
     for record in tree.getroot().findall("ClinicalRecord"):
         ref = record.get("ref")
         name_raw = record.findtext("Patient_Name", "").strip()
+        dob = record.findtext("DOB", "").strip()
+        sex = record.findtext("Sex", "").strip()
+        bmi = record.findtext("BMI", "").strip()
+        
         parts = [p.strip() for p in name_raw.split(",")]
         full_name = f"{parts[1]} {parts[0]}" if "," in name_raw else name_raw
         
         patient_uri = HOSP_B_INST[safe_uri(ref)]
         g.add((patient_uri, RDF.type, CLIN.ClinicalSubject))
+        g.add((patient_uri, CLIN.Subject_Ref, Literal(ref)))
+        g.add((patient_uri, CLIN.Patient_Name, Literal(full_name)))
+        g.add((patient_uri, CLIN.DOB, Literal(dob)))
+        g.add((patient_uri, CLIN.Sex, Literal(sex)))
+        
+        if bmi:
+            g.add((patient_uri, CLIN.BMI, Literal(float(bmi), datatype=XSD.float)))
 
         # Entity Resolution via owl:sameAs
         norm_name = normalize(full_name)
@@ -129,6 +150,14 @@ def build_raw_graph():
             uri = DISEASE_MAP_B.get(diag.get("code", "").lower())
             if uri: g.add((patient_uri, CLIN.hasDiagnosis, uri))
 
+        for gdiag in record.findall("GeneticDiagnosis"):
+            uri = DISEASE_MAP_B.get(gdiag.get("code", "").lower())
+            if uri: g.add((patient_uri, CLIN.hasGeneticDiagnosis, uri))
+
+        for parent in record.findall("BiologicalParent"):
+            p_uri = HOSP_B_INST[safe_uri(parent.text)]
+            g.add((patient_uri, CLIN.hasBiologicalParent, p_uri))
+
         for med in record.findall("Medication"):
             uri = DRUG_MAP_B.get(normalize(med.findtext("GenericName", "")))
             if uri: g.add((patient_uri, CLIN.onMedication, uri))
@@ -136,6 +165,30 @@ def build_raw_graph():
         for food in record.findall("NutritionLog"):
             uri = FOOD_MAP_B.get(normalize(food.findtext("FoodItem", "")))
             if uri: g.add((patient_uri, CLIN.hasNutritionEntry, uri))
+
+        officer = record.findtext("ClinicalOfficer", "").strip()
+        if officer:
+            if "," in officer:
+                parts = officer.split(",")
+                phys_name = f"Dr. {parts[1].replace(' MD','').strip()} {parts[0].strip()}"
+            else:
+                phys_name = officer
+            doctor_uri = CLIN[safe_uri(phys_name)]
+            g.add((doctor_uri, RDF.type, CLIN.ClinicalOfficer))
+            g.add((patient_uri, CLIN.underCareOf, doctor_uri))
+            
+            for peer in record.findall("DoctorConsultsWith"):
+                p_name = peer.text.strip()
+                if "," in p_name:
+                    p_parts = p_name.split(",")
+                    p_name = f"Dr. {p_parts[1].replace(' MD','').strip()} {p_parts[0].strip()}"
+                peer_uri = CLIN[safe_uri(p_name)]
+                g.add((doctor_uri, CLIN.consultsWith, peer_uri))
+                
+        for friend in record.findall("FriendOfPatient"):
+            friend_uri = HOSP_B_INST[safe_uri(friend.text.strip())]
+            g.add((friend_uri, RDF.type, CLIN.ClinicalSubject))
+            g.add((patient_uri, CLIN.knowsPatient, friend_uri))
 
     # Remove owl:imports because all triples are already merged in this graph
     # (owlready2 will try to download the fake URLs from the internet otherwise)

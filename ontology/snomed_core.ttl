@@ -6,20 +6,17 @@
 # SNOMED CT namespace
 @prefix sct:  <http://snomed.info/id/> .
 
-# ─────────────────────────────────────────────────────────────
 #  SNOMED CT SUBSET
 #  This file acts as the GLOBAL STANDARD for the project.
-#  It contains a tiny slice of the real SNOMED CT taxonomy,
+#  It contains a small part of the real SNOMED CT taxonomy,
 #  using real SCTID codes for our diseases and drugs.
-# ─────────────────────────────────────────────────────────────
+
 <http://snomed.info/id/core>
     rdf:type owl:Ontology ;
     rdfs:label "SNOMED CT Subset" ;
     rdfs:comment "A lightweight simulation of SNOMED CT using real SCTIDs for integration." .
 
-# ──────────────────────────────────────────────
 #  TOP-LEVEL SNOMED CONCEPTS
-# ──────────────────────────────────────────────
 
 # 404684003 = Clinical finding (SNOMED's root for diseases)
 sct:404684003 rdf:type owl:Class ;
@@ -38,9 +35,7 @@ sct:105590001 rdf:type owl:Class ;
     rdfs:label "Substance (Food)" .
 
 
-# ──────────────────────────────────────────────
 #  DISEASE HIERARCHY (SNOMED subset)
-# ──────────────────────────────────────────────
 
 # Metabolic diseases
 sct:73211009 rdf:type owl:Class ;
@@ -51,6 +46,14 @@ sct:73211009 rdf:type owl:Class ;
 sct:38341003 rdf:type owl:Class ;
     rdfs:subClassOf sct:404684003 ;
     rdfs:label "Hypertension" .
+
+sct:32895009 rdf:type owl:Class ;
+    rdfs:subClassOf sct:404684003 ;
+    rdfs:label "Hereditary disease" .
+
+sct:58756001 rdf:type owl:Class ;
+    rdfs:subClassOf sct:32895009 ;
+    rdfs:label "Huntington's chorea (disorder)" .
 
 # Respiratory
 sct:195967001 rdf:type owl:Class ;
@@ -63,9 +66,7 @@ sct:709044004 rdf:type owl:Class ;
     rdfs:label "Chronic kidney disease" .
 
 
-# ──────────────────────────────────────────────
 #  DRUG HIERARCHY (SNOMED subset)
-# ──────────────────────────────────────────────
 
 # Non-steroidal anti-inflammatory drug (NSAID) - Parent class
 sct:397156001 rdf:type owl:Class ;
@@ -104,18 +105,14 @@ sct:372605008 rdf:type owl:Class ;
     rdfs:label "Amlodipine" .
 
 
-# ──────────────────────────────────────────────
 #  FOODS
-# ──────────────────────────────────────────────
 
 sct:110540003 rdf:type owl:Class ;
     rdfs:subClassOf sct:105590001 ;
     rdfs:label "Grapefruit" .
 
 
-# ──────────────────────────────────────────────
 #  PROPERTIES
-# ──────────────────────────────────────────────
 
 sct:associatedWith rdf:type owl:ObjectProperty ;
     rdfs:label "has clinical finding" .
