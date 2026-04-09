@@ -143,7 +143,11 @@ clin:Patient_Name rdf:type owl:DatatypeProperty ;
     rdfs:range xsd:string .
 
 clin:DOB rdf:type owl:DatatypeProperty ;
-    rdfs:domain clin:Human ;
+    rdfs:domain clin:ClinicalSubject ;
+    rdfs:range xsd:string .
+
+clin:hasSpecialty rdf:type owl:DatatypeProperty ;
+    rdfs:domain clin:ClinicalOfficer ;
     rdfs:range xsd:string .
 
 clin:Sex rdf:type owl:DatatypeProperty ;

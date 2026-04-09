@@ -98,7 +98,15 @@ ehr:PatientID rdf:type owl:DatatypeProperty ;
     rdfs:domain ehr:EHR_Record ;
     rdfs:range xsd:string .
 
+ehr:hasSpecialty rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:MedicalPersonnel ;
+    rdfs:range xsd:string .
+
 ehr:FullName rdf:type owl:DatatypeProperty ;
+    rdfs:domain ehr:Person ;
+    rdfs:range xsd:string .
+
+ehr:DateOfBirth rdf:type owl:DatatypeProperty ;
     rdfs:domain ehr:Person ;
     rdfs:range xsd:string .
 

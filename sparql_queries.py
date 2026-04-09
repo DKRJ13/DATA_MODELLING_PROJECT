@@ -52,9 +52,9 @@ def run_queries():
     for row in g.query(q1):
         found1 = True
         patient_uri = str(row.patient).split('#')[-1]
-        print(f" 🚨 [ALERT] High Bleeding Risk Detected: {patient_uri}")
+        print(f" [ALERT] High Bleeding Risk Detected: {patient_uri}")
     
-    if not found1: print("  ✓ No bleeding risk patients found.")
+    if not found1: print("  - No bleeding risk patients found.")
 
     # ─────────────────────────────────────────────────────────────
     # QUERY 2: Find all patients with ANY form of Diabetes
@@ -81,7 +81,7 @@ def run_queries():
     for row in g.query(q2):
         found2 = True
         patient_uri = str(row.patient).split('#')[-1]
-        print(f"  ⚕️ Patient {patient_uri} has Diabetes.")
+        print(f"  - Patient {patient_uri} has Diabetes.")
         
         
     if not found2: print("  No diabetic patients found.")
@@ -89,13 +89,17 @@ def run_queries():
     q3 = """
     PREFIX clin: <http://hospital-b.org/clinical#>
     PREFIX ehr: <http://hospital-a.org/ehr#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT DISTINCT ?patientName ?doctorName WHERE {
+    SELECT DISTINCT ?patientName ?doctorName ?specialty WHERE {
         ?patient a ehr:EHR_Record .
         ?patient clin:eligibleForSecondOpinionFrom ?doctor .
         
         ?patient ehr:FullName ?patientName .
-        ?doctor clin:Patient_Name ?doctorName .
+        ?doctor rdfs:label ?doctorName .
+        
+        # Pull the specialty to PROVE doctors share clinical expertise fields!
+        { ?doctor ehr:hasSpecialty ?specialty } UNION { ?doctor clin:hasSpecialty ?specialty }
     }
     """
     
@@ -107,7 +111,7 @@ def run_queries():
     found3 = False
     for row in g.query(q3):
         found3 = True
-        print(f"  🤝 Hospital A Patient '{row.patientName}' is eligible for a Second Opinion from '{row.doctorName}'!")
+        print(f"  - Hospital A Patient '{row.patientName}' is eligible for a Second Opinion from '{row.doctorName}' ({row.specialty})!")
     if not found3: print("  No Hospital A patients inherited the rule.")
 
     q4 = """
@@ -134,11 +138,11 @@ def run_queries():
     found4 = False
     for row in g.query(q4):
         found4 = True
-        print(f"  🧬 Patient '{row.patientName}' has genetic risk of SNOMED:58756001 (Huntington's chorea)!")
+        print(f"  - Patient '{row.patientName}' has genetic risk of SNOMED:58756001 (Huntington's chorea)!")
     if not found4: print("  No genetic risks found.")
 
     print("\n" + "="*60)
-    print("✅ Queries completed.")
+    print("[SUCCESS] Queries completed.")
 
 if __name__ == "__main__":
     run_queries()

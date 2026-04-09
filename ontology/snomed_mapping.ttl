@@ -112,9 +112,7 @@ ehr:Huntingtons           rdf:type sct:58756001 .
 clin:HuntingtonsDisease   rdf:type sct:58756001 .
 
 
-#  REASONER RULES 
-#  "Any Patient that has (Prescription=Warfarin) AND (Consumes=Grapefruit)
-#   is automatically classified as having BleedingRisk."
+# REASONER RULES 
 
 # Rule 1: Warfarin + Grapefruit -> Bleeding Risƒk
 sct:BleedingRiskPatient rdf:type owl:Class ;
